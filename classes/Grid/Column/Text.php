@@ -15,6 +15,7 @@ class Grid_Column_Text extends Grid_Column {
 	 * @var array   callback class and method
 	 */
 	public $callback = null;
+	public $append = '';
 
 	/**
 	 * Render the table cell for this column, given data.
@@ -28,11 +29,16 @@ class Grid_Column_Text extends Grid_Column {
 	 */
 	public function render($data) {
 		$data = (object) $data;
-		$text = $data->{$this->field};
-		if ( ! empty($this->callback))
-		{
-			$text = call_user_func($this->callback, $text);
+		if (isset($data->{$this->field})){
+			$text = $data->{$this->field};		
+		} else {
+			$text = '';
 		}
+		if (!empty($this->callback) && is_callable($this->callback)){
+			$cb = $this->callback;
+			$text = $cb($text, $data);
+		}
+		$text .= $this->append;
 
 		return $text;
 	}
