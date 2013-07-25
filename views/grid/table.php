@@ -2,28 +2,39 @@
 if (Kohana::$profiling === TRUE) {
     $benchmark = Profiler::start('grid','render');
 }
-
-echo count($links) > 1 ? '<ul>' : null;
+if ($form) echo $form;
+?>
+<div class="btn-toolbar"><?php
 foreach($links as $link) {
-    echo count($links) > 1 ? '<li>' : null;
-    echo $link;
-    echo count($links) > 1 ? '</li>' : null;
+	$div_class = '';
+	if ($link->pull) $div_class="pull-{$link->pull}";
+    echo "<div class='btn-group $div_class'>$link</div>";
 }
-echo count($links) > 1 ? '</ul>' : null;
-
-echo '<table class="sortable">';
-
-echo '<thead>';
-echo '    <tr>';
+foreach($header as $head) {
+	$div_class = '';
+	if ($head->pull) $div_class="pull-{$head->pull}";
+    echo "<div class='btn-group $div_class'>$head</div>";
+}
+?>
+</div>
+<table <?php echo $attrs;?>>
+	<thead>
+		<tr>
+<?php
 foreach($columns as $column) {
-    echo '        <th>',$column->title,'</th>';
-}
-echo '    </tr>';
-echo '</thead>';
-
-echo '<tbody>';
+	$title = $column->render_th();
+    echo "<th>$title</th>";
+}?>
+		</tr>
+	</thead>
+	<tbody>
+<?php
 foreach($dataset as $data) {
-    echo '    <tr>';
+	$row_attr = '';
+	if (is_callable($row_attr_callback)){
+		$row_attr = $row_attr_callback((object) $data);
+	}
+    echo "    <tr $row_attr>";
     foreach($columns as $column) {
         echo '        <td>',$column->render($data),'</td>';
     }
@@ -32,6 +43,11 @@ foreach($dataset as $data) {
 echo '</tbody>';
 
 echo '</table>';
+if ($form) echo '</form>';
+if (!empty($pagination)){
+	echo $pagination->render();
+}
+
 
 if (isset($benchmark)) {
     Profiler::stop($benchmark);
