@@ -26,6 +26,11 @@ class Grid_Link {
 	public $text;
 
 	/**
+	 * @var string  bootstrap alignment option
+	 */
+	public $pull;
+
+	/**
 	 * Set the link type
 	 *
 	 * @param   string  [optional] link type
