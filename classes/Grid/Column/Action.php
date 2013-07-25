@@ -4,8 +4,8 @@
  * Action column for the Grid library
  *
  * @package     Grid
- * @author      Kyle Treubig
- * @copyright   (C) 2010 Kyle Treubig
+ * @author      Kyle Treubig, Jonathan Hulme
+ * @copyright   (C) 2010 Kyle Treubig, Jonathan Hulme 2011
  * @license     MIT
  */
 class Grid_Column_Action extends Grid_Column {
@@ -19,6 +19,11 @@ class Grid_Column_Action extends Grid_Column {
 	 * @var string  action URL
 	 */
 	public $url;
+
+	/**
+	 * @var string  css attributes
+	 */
+	public $attrs = Array();
 
 	/**
 	 * @var Route   action route
@@ -44,6 +49,11 @@ class Grid_Column_Action extends Grid_Column {
 	 * @var string  display text
 	 */
 	public $text;
+	
+	/**
+	 * @var string  url append
+	 */
+	public $url_append;
 
 	/**
 	 * Render the table cell for this column, given data.
@@ -66,10 +76,11 @@ class Grid_Column_Action extends Grid_Column {
 		}
 
 		$class = empty($this->class) ? array() : array('class' => $this->class);
-
+		$class = array_merge($class,$this->attrs);
+		
 		if (empty($this->route))
 		{
-			$url = $this->url.'/'.$value;
+			$url = $this->url . '/' . $value . $this->url_append;
 		}
 		else
 		{
