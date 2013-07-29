@@ -32,6 +32,11 @@ class Grid_Column_Date extends Grid_Column {
 	public function render($data) {
 		$data = (object) $data;
 		$text = $data->{$this->field};
+
+		if (!is_integer($text)){
+			$text = strtotime($text);
+		}
+
 		return date($this->format, $text);
 	}
 
