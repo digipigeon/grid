@@ -22,8 +22,9 @@ foreach($header as $head) {
 		<tr>
 <?php
 foreach($columns as $column) {
+	$attrs = $column->render_attrs();
 	$title = $column->render_th();
-    echo "<th>$title</th>";
+    echo "<th $attrs>$title</th>";
 }?>
 		</tr>
 	</thead>
@@ -36,7 +37,12 @@ foreach($dataset as $data) {
 	}
     echo "    <tr $row_attr>";
     foreach($columns as $column) {
-        echo '        <td>',$column->render($data),'</td>';
+    	$td_attrs = '';
+    	if (!empty($column->cell_attrs)){
+    		$td_attrs = $column->cell_attrs;
+		}
+    	
+        echo "        <td$td_attrs>",$column->render($data),'</td>';
     }
     echo '    </tr>';
 }
@@ -44,10 +50,20 @@ echo '</tbody>';
 
 echo '</table>';
 if ($form) echo '</form>';
+if (!empty($footer)){
+	echo '<div class="btn-toolbar">';
+	
+	foreach($footer as $foot) {
+		$div_class = '';
+		if ($foot->pull) $div_class="pull-{$foot->pull}";
+	    echo "<div class='btn-group $div_class'>$foot</div>";
+	}
+	echo "</div>";
+}
+
 if (!empty($pagination)){
 	echo $pagination->render();
 }
-
 
 if (isset($benchmark)) {
     Profiler::stop($benchmark);

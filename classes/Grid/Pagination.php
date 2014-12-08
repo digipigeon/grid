@@ -22,7 +22,11 @@ class Grid_Pagination {
 	
 	public function __construct($total_rows, $per_page){
 		$this->page = isset($_REQUEST['page']) ? $_REQUEST['page'] : 1;
-		$this->link = $_SERVER['PATH_INFO'];
+		if (!empty($_SERVER['PATH_INFO'])){
+			$this->link = $_SERVER['PATH_INFO'];
+		} else {
+			$this->link = $_SERVER['REQUEST_URI'];
+		}
 
 		$this->total_rows = $total_rows;
 		$this->per_page = $per_page;

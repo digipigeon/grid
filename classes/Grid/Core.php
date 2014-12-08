@@ -16,6 +16,8 @@ class Grid_Core {
 	protected $row_attr_callback;
 	protected $pagination = false;
 	protected $header = Array();
+	protected $footer = Array();
+	public $data_tags = false;
 
 	/** Array of table columns */
 	private $columns = array();
@@ -50,7 +52,7 @@ class Grid_Core {
 		$column = new $model;
 		$index = count($this->columns);
 		array_push($this->columns, $column);
-		Kohana::$log->add(Log::DEBUG, 'Added '.$type.' column to grid');
+//		Kohana::$log->add(Log::DEBUG, 'Added '.$type.' column to grid');
 		return $this->columns[$index];
 	}
 
@@ -58,6 +60,12 @@ class Grid_Core {
 		$model = "Grid_Component_" . ucfirst($type);
 		$link = new $model($type);
 		$this->header[] = &$link; 
+		return $link;
+	}
+	public function &footer($type='text'){
+		$model = "Grid_Component_" . ucfirst($type);
+		$link = new $model($type);
+		$this->footer[] = &$link; 
 		return $link;
 	}
 
@@ -117,16 +125,25 @@ class Grid_Core {
 		}
 		$attrs .= ' class="table table-hover ' . $this->class . '"';
 		
+		foreach($this->columns as $column){
+			if (!empty($column->cell_attrs)){
+				$column->cell_attrs = HTML::attributes($column->cell_attrs);
+			}
+		}
+		
+		
 		$view->form		= $this->form ? Form::open($this->form) : false;
 		$view->attrs	= $attrs;
 		$view->columns	= $this->columns;
 		$view->header	= $this->header;
+		$view->footer	= $this->footer;
 		$view->links	= $this->links;
 		$view->dataset	= $this->dataset;
 		$view->row_attr_callback = $this->row_attr_callback;
 		$view->pagination	= $this->pagination;
+		$view->data_tags = $this->data_tags;
 		
-		Kohana::$log->add(Log::DEBUG, 'Rendering the grid');
+//		Kohana::$log->add(Log::DEBUG, 'Rendering the grid');
 		return $view->render();
 	}
 

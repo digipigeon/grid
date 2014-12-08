@@ -24,6 +24,10 @@ abstract class Grid_Column {
 	 * @var string  column title
 	 */
 	public $sort;
+	
+	public $cell_attrs;
+
+	public $col_attrs = Array();
 
 	/**
 	 * Magic call method to set variable member when
@@ -65,5 +69,9 @@ abstract class Grid_Column {
 			
 		}
 		return $title;
+	}
+	
+	public function render_attrs(){
+		return HTML::attributes($this->col_attrs);
 	}
 }

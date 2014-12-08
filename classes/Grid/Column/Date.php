@@ -33,7 +33,7 @@ class Grid_Column_Date extends Grid_Column {
 		$data = (object) $data;
 		$text = $data->{$this->field};
 
-		if (!is_integer($text)){
+		if (!is_integer($text) && !is_double($text)){
 			$text = strtotime($text);
 		}
 

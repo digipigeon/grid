@@ -24,6 +24,8 @@ class Grid_Link {
 	 * @var string  display text
 	 */
 	public $text;
+	public $dropdown;
+	public $attrs = Array();
 
 	/**
 	 * @var string  bootstrap alignment option
@@ -64,14 +66,14 @@ class Grid_Link {
 		switch ($this->type)
 		{
 			case 'submit':
-				$link = form::submit('submit', $this->text);
+				$link = Form::submit('submit', $this->text);
 			break;
 			case 'button':
-				$link = html::anchor($this->action, '<button type="button">' . $this->text . '</button>');
+				$link = HTML::anchor($this->action, '<button type="button">' . $this->text . '</button>');
 			break;
 			case 'link':
 			default:
-				$link = html::anchor($this->action, $this->text);
+				$link = html::anchor($this->action, $this->text,array_merge(Array('class'=> 'btn'),$this->attrs));
 		}
 		return $link;
 	}
